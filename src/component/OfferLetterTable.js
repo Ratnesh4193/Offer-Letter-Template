@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Form } from "react-bootstrap";
 import logo from "./delete.png";
 const OfferLetterTable = ({
@@ -21,7 +22,9 @@ const OfferLetterTable = ({
   setPdf,
   activeCount,
   setActiveCount,
+  refs,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="offer-letter-table">
       <Row>
@@ -41,6 +44,10 @@ const OfferLetterTable = ({
                           className="textbox "
                           value={varName[key1][key2]}
                           placeholder="Enter the Variable Name"
+                          ref={refs[key1][key2]}
+                          onFocus={(e) => {
+                            e.target.select();
+                          }}
                           onChange={(e) => {
                             let newVarName = [...varName];
                             newVarName[key1][key2] = e.target.value;
@@ -163,7 +170,7 @@ const OfferLetterTable = ({
           <button
             className="btn btn-green"
             onClick={() => {
-              importTemplate();
+              navigate("/import");
             }}
           >
             Import Template

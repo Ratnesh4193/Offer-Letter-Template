@@ -1,54 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import BasicDocument from "./BasicDocument";
 import OfferLetterDisplay from "./OfferLetterDisplay";
 import OfferLetterTable from "./OfferLetterTable";
 import { Row, Col } from "react-bootstrap";
 
-const OfferLetterGenerator = () => {
+const OfferLetterGenerator = ({ txtFile, setTxtFile, obj, setObj }) => {
   let [pdf, setPdf] = useState(0);
-  const [obj, setObj] = useState({});
-
-  const [txtFile, setTxtFile] = useState([
-    "Dear Candidate",
-    "We are pleased to offer you the position of Software Developer at Equip",
-    "The terms and conditions of your employment are as follows:",
-    "Role: Software Developer",
-    "Salary: Rs 2500000 per year",
-    "Benefits: Health insurance, paid time off, retirement plan",
-    "Please review this offer carefully and sign the acceptance letter attached to this email. We look forward to welcoming you to our team",
-    "Sincerely",
-    "Equip",
-    "HR Manager Equip",
-  ]);
   const [sentance, setSentance] = useState([]);
   const [active, setActive] = useState([]);
   const [varName, setVarName] = useState([]);
   const [varValue, setVarValue] = useState([]);
   const [activeCount, setActiveCount] = useState(0);
+  const refTemp = useRef(null);
+  const [refs, setRefs] = useState([]);
+
   useEffect(() => {
+    console.log(txtFile, obj);
     let updatedTxt = [];
     let updatedName = [];
     let updatedValue = [];
     let activeValue = [];
+    let curRef = [];
 
     txtFile.forEach((txt, key1) => {
       let curUpdatedText = txt.split(" ");
       let curUpdateName = [];
       let curUpdateValue = [];
+      let curUpdatedRef = [];
+
       curUpdatedText.forEach((ele, key2) => {
-        curUpdateName.push(obj[ele] == undefined ? "var" + key2 : obj[ele]);
-        curUpdateValue.push(isVar(ele) ? obj[getText[ele]] : ele);
+        const word = ele[0] === "$" ? ele.substring(1) : ele;
+        curUpdateName.push(
+          obj.hasOwnProperty(word) ? word : "var" + key1 + "." + key2
+        );
+        curUpdateValue.push(isVar(ele) ? obj[word] : ele);
+        curUpdatedRef.push(refTemp);
       });
       updatedTxt.push(curUpdatedText);
       updatedName.push(curUpdateName);
       updatedValue.push(curUpdateValue);
       activeValue.push(new Array(curUpdatedText.length).fill(false));
+      curRef.push(curUpdatedRef);
     });
     setSentance(updatedTxt);
-    console.log(updatedName);
     setVarName(updatedName);
     setVarValue(updatedValue);
     setActive(activeValue);
+    setRefs(curRef);
   }, [txtFile]);
 
   const isVar = (txt) => {
@@ -74,44 +72,23 @@ const OfferLetterGenerator = () => {
 
   // Export the document as a text file.
   const exportTemplate = () => {
-    let txtDoc = "";
-    sentance.forEach((ele) => {
-      txtDoc += ele + " ";
+    let txtDoc = [];
+    sentance.forEach((line) => {
+      let txt = "";
+      line.forEach((ele) => {
+        txt += ele + " ";
+      });
+      txtDoc.push(txt.trim());
     });
     let newObj = obj;
     obj["newTemplate"] = txtDoc;
     downloadObjectAsText(newObj);
   };
 
-  const importTemplate = () => {
-    const a = document.createElement("input");
-    a.setAttribute("type", "file");
-    a.setAttribute("id", "template-input");
-
-    document.body.appendChild(a);
-    a.onchange = () => {
-      const selectedFile = a.files[0];
-      const reader = new FileReader();
-      reader.readAsText(selectedFile);
-
-      // Define the function to be executed when the file is loaded
-      reader.onload = function(e) {
-        const data = JSON.parse(e.target.result);
-        setTxtFile(data["newTemplate"]);
-        delete data["newTemplate"];
-        setObj(data);
-      };
-    };
-
-    a.click();
-    document.body.removeChild(a);
-  };
-
   return (
     <>
       {pdf === 0 && (
         <>
-          <div className="page-heading">Offer Letter Builder</div>
           <Row>
             <Col md={6}>
               <OfferLetterDisplay
@@ -130,10 +107,10 @@ const OfferLetterGenerator = () => {
                 isVar={isVar}
                 getText={getText}
                 exportTemplate={exportTemplate}
-                importTemplate={importTemplate}
                 setPdf={setPdf}
                 activeCount={activeCount}
                 setActiveCount={setActiveCount}
+                refs={refs}
               />
             </Col>
             <Col md={6}>
@@ -153,10 +130,10 @@ const OfferLetterGenerator = () => {
                 isVar={isVar}
                 getText={getText}
                 exportTemplate={exportTemplate}
-                importTemplate={importTemplate}
                 setPdf={setPdf}
                 activeCount={activeCount}
                 setActiveCount={setActiveCount}
+                refs={refs}
               />
             </Col>
           </Row>

@@ -19,6 +19,7 @@ const OfferLetterDisplay = ({
   setPdf,
   activeCount,
   setActiveCount,
+  refs,
 }) => {
   return (
     <div className="offer-letter-display">
@@ -36,6 +37,9 @@ const OfferLetterDisplay = ({
                       const newActive = [...active];
                       newActive[key1][key2] = true;
                       setActive(newActive);
+                      setTimeout(() => {
+                        refs[key1][key2].current.focus();
+                      }, 10);
                       if (isVar(ele) === false) {
                         let curActive = activeCount;
                         curActive++;
