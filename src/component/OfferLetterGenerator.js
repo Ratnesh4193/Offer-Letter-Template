@@ -139,7 +139,9 @@ const OfferLetterGenerator = ({ txtFile, setTxtFile, obj, setObj }) => {
           </Row>
         </>
       )}
-      {pdf === 1 && <BasicDocument sentance={sentance} getText={getText} />}
+      {pdf === 1 && (
+        <BasicDocument sentance={sentance} getText={getText} setPdf={setPdf} />
+      )}
     </>
   );
 };

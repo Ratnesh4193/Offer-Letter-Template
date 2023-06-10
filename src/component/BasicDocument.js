@@ -7,6 +7,7 @@ import {
   PDFViewer,
 } from "@react-pdf/renderer";
 import React from "react";
+import { Navigate } from "react-router-dom";
 // Create styles
 const styles = StyleSheet.create({
   page: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-function BasicDocument({ sentance, getText }) {
+function BasicDocument({ sentance, getText, setPdf }) {
   let displayText = [];
   sentance.forEach((line) => {
     let txt = "";
@@ -42,24 +43,34 @@ function BasicDocument({ sentance, getText }) {
     displayText.push(txt);
   });
   return (
-    <PDFViewer style={styles.viewer}>
-      {/* Start of the document*/}
-      <Document>
-        {/*render a single page*/}
-        <Page size="A4" style={styles.page}>
-          <View style={styles.heading}>
-            <Text>Job Offer</Text>
-          </View>
-          {displayText.map((ele) => {
-            return (
-              <View style={styles.section}>
-                <Text>{ele}</Text>
-              </View>
-            );
-          })}
-        </Page>
-      </Document>
-    </PDFViewer>
+    <>
+      <PDFViewer style={styles.viewer}>
+        {/* Start of the document*/}
+        <Document>
+          {/*render a single page*/}
+          <Page size="A4" style={styles.page}>
+            <View style={styles.heading}>
+              <Text>Job Offer</Text>
+            </View>
+            {displayText.map((ele) => {
+              return (
+                <View style={styles.section}>
+                  <Text>{ele}</Text>
+                </View>
+              );
+            })}
+          </Page>
+        </Document>
+      </PDFViewer>
+      <button
+        className="btn btn-blue"
+        onClick={() => {
+          setPdf(0);
+        }}
+      >
+        Home Page
+      </button>
+    </>
   );
 }
 export default BasicDocument;

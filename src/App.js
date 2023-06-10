@@ -10,7 +10,6 @@ const App = () => {
     "Dear Candidate",
     "We are pleased to offer you the position of Software Developer at Equip",
     "The terms and conditions of your employment are as follows:",
-    "Role: Software Developer",
     "Salary: Rs 2500000 per year",
     "Benefits: Health insurance, paid time off, retirement plan",
     "Please review this offer carefully and sign the acceptance letter attached to this email. We look forward to welcoming you to our team",

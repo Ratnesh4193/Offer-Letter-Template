@@ -37,6 +37,7 @@ const OfferLetterDisplay = ({
                       const newActive = [...active];
                       newActive[key1][key2] = true;
                       setActive(newActive);
+                      console.log(key1, key2);
                       setTimeout(() => {
                         refs[key1][key2].current.focus();
                       }, 10);
