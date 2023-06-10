@@ -125,7 +125,7 @@ img{
   height: 2rem;
 }
 .btn {
-  width: 200px;
+  width: 100%;
   font-size: 1rem;
   font-family: sans-serif;
   color: #333;
